@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+
+# Arduino
+*.tmp
+
+# Node-RED runtime/generated files
+node-red/.config.*.backup
+node-red/.flows_cred.json.backup
+node-red/flows/.flows.json.backup
+
+# IDE / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Local secrets
+.env
+.env.*

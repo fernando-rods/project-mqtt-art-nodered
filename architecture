@@ -1,0 +1,61 @@
+ _____________________________________
+|                 THING               |
+|                   │                 |
+|        ┌──────────┼──────────┐      |
+|        │          │          │      |
+|     Property    Action      Event   |
+|        │          │          │      |
+| lightSensor    setLed     ledStatus |
+|_____________________________________|
+
+ ───────────────────────────────────
+| JSON type       Semântica         |
+ ───────────────────────────────────
+| request         Action            |
+| observation     Property          |
+| status          Event             |
+| description     Thing Description |
+ ───────────────────────────────────
+
+Communication: request (action)
+   │
+   └── target = esp_01
+       action = turn_on
+
+Sensing: read (property)
+   │
+   └── target = esp_01
+       property = lightSensor
+       value = 72
+
+Monitoring: status (event)
+   │
+   └── target = esp_01
+       event = ledStatus
+       data = on
+
+Acting:
+   │
+   └── target = esp_01
+       action = setLed
+       command = on
+
+Request: action
+- request(esp_01,setLed,on)
+
+Read: property
+- read(esp_01,lightSensor,72)
+
+Status: event
+- status(esp_01,led,on)
+
+JSON types:
+- request(Target, Action)
+- read(Target, Property, Value)
+- status(Target, Event, Data)
+- action(Target, Action, Command)
+
+WoT Thing Description:
+- properties
+- actions
+- events

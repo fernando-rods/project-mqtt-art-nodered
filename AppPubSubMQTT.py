@@ -11,7 +11,7 @@ BROKER = "YOUR_MQTT_BROKER"  # Endereço IP
 PORT = 1883
 user = "YOUR_MQTT_UER"      # Username
 pwd = "YOUR_MQTT_PASSWORD" # Passwaord
-TOPIC_PUBLISH = "mqtt/jacamo/agent/bob"
+TOPIC_PUBLISH = "mqtt/jacamo/agent/bob" #"mqtt/jacamo/device/properties" #"mqtt/jacamo/device/events"
 TOPIC_SUBSCRIBE = "mqtt/jacamo/device/esp_01"
 
 # Callback: conexão estabelecida com o broker
@@ -31,7 +31,7 @@ def on_message(client, userdata, msg):
 client = mqtt.Client()
 
 # Usuário e senha
-client.username_pw_set(user, pwd) 
+client.username_pw_set(user, pwd)
 
 # Associação dos callbacks
 client.on_connect = on_connect
@@ -46,13 +46,21 @@ client.loop_start()
 try:
     while (True):
     	time.sleep(1)
-    	#Message JSON = appPy turn_on
-    	source, content = input("Digite: source content: ").split()
-    	message = {"source":source,"content":content}
+    # Reporting: Message JSON Sensor = app_02 lightSensor 12
+    #thing, property, value = input("Digite: source content: ").split() #report(Thing, Property, Value)
+    #message = {"thing":thing,"property":property, "value":float(value)}
+
+    # Monitoring: Message JSON Event = app_01 overLight 75
+    #thing, event, data = input("Digite: source content: ").split() #event(Thing, Event, Data)
+    #message = {"thing":thing,"event":event, "data":data}
+
+    # Communication: Message JSON to Bob = esp_01 setLed on
+    target, operation, data = input("Digite: source content: ").split() #request(Target, Operation, Data)
+    message = {"target":target,"operation":operation, "data":data}
     	json_message = json.dumps(message)
     	client.publish(TOPIC_PUBLISH, json_message)
     	print(f"Publicado: {json_message} em {TOPIC_PUBLISH}")
-    	
+
 except KeyboardInterrupt:
     print("\nEncerrando cliente MQTT...")
     client.loop_stop()

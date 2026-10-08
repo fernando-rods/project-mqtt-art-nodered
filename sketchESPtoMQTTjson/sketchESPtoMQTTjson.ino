@@ -22,10 +22,10 @@ const char* ssid = "YOUR_WIFI_SSID";          // Nome da rede WI-FI que deseja s
 const char* password = "YOUR_WIFI_PASSWORD"; // Senha da rede WI-FI que deseja se conectar
 
 // Informações da Broker MQTT
-const char* mqttServer = "YOUR_MQTT_BROKER";   //server
-const char* mqttUser = "YOUR_MQTT_UER";          //user
-const char* mqttPassword = "YOUR_MQTT_UER";     //password
-const int mqttPort = 1883;              //port
+const char* mqttServer = "YOUR_MQTT_BROKER";       //server
+const char* mqttUser = "YOUR_MQTT_USER";          //user
+const char* mqttPassword = "YOUR_MQTT_PASSWORD"; //password
+const int mqttPort = 1883;                      //port
 
 // Objetos globais
 WiFiClient espClient;             // Cria o objeto com nome: "espClient"
@@ -194,6 +194,40 @@ void checkSensors(){
     Serial.print("Leitura do sensor: ");
     Serial.print(sensorValue);
     Serial.println(" %");
+
+    if(sensorValue < 15 || sensorValue > 85){
+      // Cria JSON de status
+      JsonDocument statusDoc;
+      if (sensorValue < 15){
+        statusDoc["thing"] = mqttClientID;
+        statusDoc["event"] = "underLight";
+        statusDoc["data"] = sensorValue;
+      }
+      if (sensorValue > 85){
+        statusDoc["thing"] = mqttClientID;
+        statusDoc["event"] = "overLight";
+        statusDoc["data"] = sensorValue;
+      }
+      // Serializa JSON
+      String msgJSON;
+      serializeJson(statusDoc, msgJSON);
+
+      // Publica status
+      if (!client.publish(mqttTopicPubEvent, msgJSON.c_str())) {
+        Serial.println("Falha ao publicar mensagem do alerta.");
+      }
+
+      // Debug
+      Serial.print("Alert - value: ");
+      Serial.println(sensorValue);
+      Serial.print("PUBLISHER - tópico: ");
+      Serial.println(mqttTopicPubEvent);
+      Serial.print("Payload enviado: ");
+      Serial.println(msgJSON);
+      Serial.println("--------------------------------------------------");
+    } else {
+      Serial.println("Nenhum alerta de luminosidade.");
+    }
   }
 }
 

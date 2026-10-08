@@ -9,9 +9,9 @@ import json
 # Configurações do broker MQTT
 BROKER = "YOUR_MQTT_BROKER"  # Endereço IP
 PORT = 1883
-user = "YOUR_MQTT_UER"      # Username
+user = "YOUR_MQTT_USER"      # Username
 pwd = "YOUR_MQTT_PASSWORD" # Passwaord
-TOPIC_PUBLISH = "mqtt/jacamo/agent/bob" #"mqtt/jacamo/device/properties" #"mqtt/jacamo/device/events"
+TOPIC_PUBLISH = "mqtt/jacamo/agent/bob"
 TOPIC_SUBSCRIBE = "mqtt/jacamo/device/esp_01"
 
 # Callback: conexão estabelecida com o broker

@@ -45,24 +45,18 @@ client.loop_start()
 
 try:
     while (True):
-    	time.sleep(1)
-    # Reporting: Message JSON Sensor = app_02 lightSensor 12
-    #thing, property, value = input("Digite: source content: ").split() #report(Thing, Property, Value)
-    #message = {"thing":thing,"property":property, "value":float(value)}
-
-    # Monitoring: Message JSON Event = app_01 overLight 75
-    #thing, event, data = input("Digite: source content: ").split() #event(Thing, Event, Data)
-    #message = {"thing":thing,"event":event, "data":data}
-
-    # Communication: Message JSON to Bob = esp_01 setLed on
-    target, operation, data = input("Digite: source content: ").split() #request(Target, Operation, Data)
-    message = {"target":target,"operation":operation, "data":data}
-    	json_message = json.dumps(message)
-    	client.publish(TOPIC_PUBLISH, json_message)
-    	print(f"Publicado: {json_message} em {TOPIC_PUBLISH}")
-
+        time.sleep(1)
+        # Communication: Message JSON to Bob = esp_01 setLed on
+        target, operation, data = input("Digite: source content: ").split() #request(Target, Operation, Data)
+        message = {"target":target,"operation":operation, "data":data}
+        json_message = json.dumps(message)
+        info = client.publish(TOPIC_PUBLISH, json_message)
+        info.wait_for_publish(timeout=1)
+        if info.rc == mqtt.MQTT_ERR_SUCCESS:
+            print(f"Publicado: {json_message} em {TOPIC_PUBLISH}")
+        else:
+            print(f"Falha na publicação MQTT (rc={info.rc})")
 except KeyboardInterrupt:
     print("\nEncerrando cliente MQTT...")
     client.loop_stop()
     client.disconnect()
-
